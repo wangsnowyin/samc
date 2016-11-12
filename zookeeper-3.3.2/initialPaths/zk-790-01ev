@@ -1,0 +1,21 @@
+packetsend id=-1743742481 from=2 to=0 state=0 leader=2 zxid=0 epoch=1
+packetsend id=-1743765762 from=2 to=1 state=0 leader=2 zxid=0 epoch=1
+packetsend id=-1743755434 from=0 to=1 state=0 leader=0 zxid=0 epoch=1
+packetsend id=-1743778715 from=0 to=2 state=0 leader=0 zxid=0 epoch=1
+packetsend id=-1743770085 from=1 to=0 state=0 leader=1 zxid=0 epoch=1
+packetsend id=-1743751111 from=1 to=2 state=0 leader=1 zxid=0 epoch=1
+nodecrash id=2
+packetsend id=-1743733052 from=0 to=1 state=0 leader=2 zxid=0 epoch=1
+packetsend id=-1743756333 from=0 to=2 state=0 leader=2 zxid=0 epoch=1
+packetsend id=-1743758894 from=1 to=0 state=0 leader=2 zxid=0 epoch=1
+packetsend id=-1743739920 from=1 to=2 state=0 leader=2 zxid=0 epoch=1
+sleep time=7000
+packetsend id=-1743770054 from=1 to=0 state=0 leader=1 zxid=0 electionEpoch=2
+packetsend id=-1743755403 from=0 to=1 state=0 leader=0 zxid=0 electionEpoch=2
+packetsend id=-1743744212 from=0 to=1 state=0 leader=1 zxid=0 electionEpoch=2
+sleep time=5000
+nodestart id=2
+packetsend id=-1743765761 from=2 to=1 state=0 leader=2 zxid=0 epoch=1
+packetsend id=-1743756332 from=0 to=2 state=0 leader=2 zxid=0 epoch=1
+packetsend id=-1743739919 from=1 to=2 state=0 leader=2 zxid=0 epoch=1
+packetsend id=-1743742480 from=2 to=0 state=0 leader=2 zxid=0 epoch=1

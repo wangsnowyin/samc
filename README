@@ -1,0 +1,96 @@
+Description
+
+This is a demo project for SAMC model checker. Besides the SCM and Sample-LE systems, 
+the other target system for this SAMC is logcabin-samc (modified by Jeffrey F. Lukman). 
+You need access from Jeffrey to download it (and also for the SAMC), so email him to 
+request an access. If you only want to learn about SAMC Integration, you won't need the
+logcabin-samc.
+
+We integrate SAMC to Logcabin's LeaderElection, LogReplication, and Snapshot protocols. 
+The model checker will run the cluster and verify it.
+
+
+Compiling Logcabin (The Target System) ~ You can skip this if you don't need to test the logcabin.
+
+1. Download the repository from https://github.com/jeffreyflukman/logcabin-samc
+
+2. You need to install :
+  #Linux x86-64 (v2.6.32 and up should work)
+  #git (v1.7 and up should work)
+  #scons (v2.0 and v2.3 are known to work)
+  #g++ (v4.4 through v4.9 and v5.1 are known to work) or clang (v3.4 through v3.7 are known to work with libstdc++ 4.9, and libc++ is also supported; see CLANG.md for more info)
+  #protobuf (v2.6.x suggested, v2.5.x should work, v2.3.x is not supported)
+  #crypto++ (v5.6.1 is known to work)
+
+3. You also going to need to get the gtest folder.
+You can get it here : http://people.cs.uchicago.edu/~lukman/samc/gtest.tar.gz
+
+1. Go to your logcabin-samc/ directory and run *scons*
+It should compile the logcabin-samc.
+
+
+Compiling SAMC (The Distributed ModelChecker)
+1. Download the SAMC from https://github.com/jeffreyflukman/samc-samplesys
+
+2. Checkout to the "file-ipc" version via *git checkout file-ipc*
+
+3. In order to compile you need to install:
+  # ant
+  # Java version 7+
+
+4. To compile it, go to samc_path/compile raft
+
+
+Running
+
+1. From samc_path/ go to raft by *cd raft*
+
+2. Open raftRunner.sh, refreshStorageNode.sh, and refreshStorage.sh with a text editor and 
+update the samc_raft variable with your samc_path
+
+3. Open clientWrite.sh, snapshot.sh, and startNode.sh and update the samc_raft variable with
+your logcabin_path
+
+4. Update the target-sys.conf to the environment that you want to verify:
+  # mc_name: <don't change this name>
+  # working_dir: location where the compilation folder will be placed
+  # exploring_strategy: 
+    Current strategy that can be used to verify the system
+    - edu.uchicago.cs.ucare.samc.server.DfsTreeTravelModelChecker for DFS
+      exploration
+    - edu.uchicago.cs.ucare.samc.server.RandomModelChecker for random
+      exploration
+    - edu.uchicago.cs.ucare.samc.server.OriginalDporModelChecker for
+      DPOR policy
+    - edu.uchicago.cs.ucare.samc.scm.SCMSAMC for SAMC policy on SCM System
+    - edu.uchicago.cs.ucare.samc.election.LeaderElectionSAMC for SAMC
+      policy on Sample-LE System
+  # verifier: the verification class
+  # workload_driver: the workload_driver class
+  # num_node: total nodes to verify
+  # num_crash: total crashes in a single path execution
+  # num_reboot: total reboots in a single path execution
+  # num_snapshot: total client snapshots in a single path execution
+  # use_ipc: <don't change this ipc-file configuration>
+  # ipc_dir: location of ipc_files for nodes and samc communication
+
+5. Update the dmck.conf for the SAMC's environment:
+  # initSteadyStateTimeout: initial phase to start nodes
+  # steadyStateTimeout: how long do we need to wait for a node to get into a steady state after
+  it has execute an event
+  # waitEndExploration: at the end of all events execution, we give some time for the system
+  to generate possible more events for a X ms.
+  # leaderElectionTimeout: if a leader election has not resolved while there is no more
+  events in queue, then we will wait for Y ms.
+
+6. Recompile samc
+
+7. Go to working_dir that you have specified in target_sys.conf
+
+8. Run working_dir/SUTRunner.sh (i.e. './raftRunner.sh'), now model checker will keep
+running until it explores all paths.
+
+9. In the terminal and working_dir/mc.log, there should be no ERROR line, and it should keep
+informing the result. If you experience this, it means that the setup is correct.
+
+

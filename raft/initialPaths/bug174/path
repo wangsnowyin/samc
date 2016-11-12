@@ -1,0 +1,15 @@
+nodecrash id=2
+packetsend transition_id=-1743732091 Event={eventMode=0, recvNode=0, term=3, hashId=1458422405, state=0, filename=raft-47045884-70625, eventType=0, sendNode=0}
+packetsend transition_id=-1743738990 Event={eventMode=0, recvNode=1, term=2, hashId=1539221394, state=0, filename=raft-49652303-70623, eventType=0, sendNode=1}
+packetsend transition_id=-1743753413 Event={eventMode=1, recvNode=0, term=3, hashId=1535405883, state=1, filename=raft-49529222-75311, eventType=1, sendNode=1}
+packetsend transition_id=-1743734439 Event={eventMode=1, recvNode=2, term=3, hashId=1543485785, state=1, filename=raft-49789864-75311, eventType=1, sendNode=1}
+packetsend transition_id=-1743727540 Event={eventMode=1, recvNode=1, term=4, hashId=1462686796, state=1, filename=raft-47183445-74290, eventType=1, sendNode=0}
+packetsend transition_id=-1743750821 Event={eventMode=1, recvNode=2, term=4, hashId=1466726747, state=1, filename=raft-47313766-74290, eventType=1, sendNode=0}
+nodestart id=2
+snapshot
+packetsend transition_id=-1743745857 Event={eventMode=0, recvNode=2, term=2, hashId=1620020415, state=0, filename=raft-52258723-81060, eventType=0, sendNode=2}
+packetsend transition_id=-1743737000 Event={eventMode=1, recvNode=0, term=3, hashId=1612164952, state=1, filename=raft-52005321-81606, eventType=1, sendNode=2}
+packetsend transition_id=-1743760281 Event={eventMode=1, recvNode=1, term=3, hashId=1616204903, state=1, filename=raft-52135642-81606, eventType=1, sendNode=2}
+packetsend transition_id=-1743733622 Event={eventMode=1, recvNode=2, term=4, hashId=1466940554, state=2, filename=raft-47320663-86291, eventType=3, sendNode=0}
+packetsend transition_id=-1743733621 Event={eventMode=1, recvNode=2, term=4, hashId=1466940555, state=2, filename=raft-47320663-86610, eventType=3, sendNode=0}
+nodecrash id=2

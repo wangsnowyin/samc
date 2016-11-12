@@ -1,0 +1,8 @@
+mc_name=DoSomething
+working_dir=~/ISSTA15/random
+exploring_strategy=edu.uchicago.cs.ucare.samc.server.RandomModelChecker
+verifier=edu.uchicago.cs.ucare.samc.election.LeaderElectionVerifier
+workload_driver=edu.uchicago.cs.ucare.samc.election.LeaderElectionEnsembleController
+num_node=3
+num_crash=0
+num_reboot=0

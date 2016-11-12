@@ -1,0 +1,16 @@
+packetsend transition_id=-1743738990 Event={eventId=1539221394, eventMode=0, sourceNode=1, filename=raft-49652303-0, currentTerm=2, senderState=0, eventType=0, destinationNode=1}
+nodecrash id=1
+packetsend transition_id=-1743745858 Event={eventId=1620020414, eventMode=0, sourceNode=2, filename=raft-52258723-0, currentTerm=2, senderState=0, eventType=0, destinationNode=2}
+nodestart id=1
+nodecrash id=1
+packetsend transition_id=-1743760281 Event={eventId=1616204903, eventMode=1, sourceNode=2, filename=raft-52135642-0, currentTerm=3, senderState=1, eventType=1, destinationNode=1}
+packetsend transition_id=-1743732091 Event={eventId=1458422405, eventMode=0, sourceNode=0, filename=raft-47045884-0, currentTerm=3, senderState=0, eventType=0, destinationNode=0}
+packetsend transition_id=-1743750821 Event={eventId=1466726747, eventMode=1, sourceNode=0, filename=raft-47313766-0, currentTerm=4, senderState=1, eventType=1, destinationNode=2}
+abstract_snapshot
+packetsend transition_id=-1743737000 Event={eventId=1612164952, eventMode=1, sourceNode=2, filename=raft-52005321-0, currentTerm=3, senderState=1, eventType=1, destinationNode=0}
+nodestart id=1
+packetsend transition_id=-1743727540 Event={eventId=1462686796, eventMode=1, sourceNode=0, filename=raft-47183445-0, currentTerm=4, senderState=1, eventType=1, destinationNode=1}
+packetsend transition_id=-1743738989 Event={eventId=1539221395, eventMode=0, sourceNode=1, filename=raft-49652303-0, currentTerm=2, senderState=0, eventType=0, destinationNode=1}
+packetsend transition_id=-1743753412 Event={eventId=1535405884, eventMode=1, sourceNode=1, filename=raft-49529222-0, currentTerm=3, senderState=1, eventType=1, destinationNode=0}
+packetsend transition_id=-1743734211 Event={eventId=1466939965, eventMode=1, sourceNode=0, filename=raft-47320644-0, currentTerm=4, senderState=2, eventType=2, destinationNode=2}
+packetsend transition_id=-1743734438 Event={eventId=1543485786, eventMode=1, sourceNode=1, filename=raft-49789864-0, currentTerm=3, senderState=1, eventType=1, destinationNode=2}

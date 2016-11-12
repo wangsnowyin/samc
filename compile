@@ -1,0 +1,13 @@
+#!/bin/bash 
+
+if [ $# -eq 1 ]; then
+  ant clean && ant && ./$1/setup
+elif [ $# -eq 2 ] && [ $2 == "all" ]; then
+  samc_dir=`pwd`
+  cd ./$1 && . ./readconfig
+  cd $target_sys_dir && ./compile.sh
+  cd $samc_dir && ant clean && ant && ./$1/setup
+else
+  echo "usage: ./compile [choose one : scm / sample-le / raft / zookeeper-3.3.2] [additional raft / zookeeper3.3.2 options: all]"
+  exit 1
+fi
