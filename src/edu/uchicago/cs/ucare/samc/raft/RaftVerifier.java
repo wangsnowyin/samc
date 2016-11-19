@@ -80,7 +80,7 @@ public class RaftVerifier extends SpecVerifier {
 		for(int node=0; node<modelCheckingServer.numNode; node++){
 			try {
 				LocalState state = this.modelCheckingServer.localStates[node];
-				switch((int)state.getValue("state")){
+				switch((Integer)state.getValue("state")){
 					case 2:
 						numLeader++;
 						break;
@@ -89,8 +89,8 @@ public class RaftVerifier extends SpecVerifier {
 						break;
 				} 
 				if(node == 0){
-					anchorTerm = (int)state.getValue("term");
-				} else if(node>0 && anchorTerm != (int)state.getValue("term")) {
+					anchorTerm = (Integer)state.getValue("term");
+				} else if(node>0 && anchorTerm != (Integer)state.getValue("term")) {
 					diffTerm = true;
 				}
 

@@ -12,8 +12,8 @@ import edu.uchicago.cs.ucare.samc.util.LocalState;
 public class LeaderElectionSAMC extends DporModelChecker {
 
     public boolean isDependent(LocalState state, Event e1, Event e2) {
-        if ((int)state.getValue("role") == LeaderElectionMain.LOOKING) {
-            int currSup = (int) state.getValue("leader");
+        if ((Integer)state.getValue("role") == LeaderElectionMain.LOOKING) {
+            int currSup = (Integer) state.getValue("leader");
             int sup1 = (Integer) e1.getValue("leader");
             int sup2 = (Integer) e2.getValue("leader");
             if (currSup < sup1 || currSup < sup2) {

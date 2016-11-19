@@ -268,7 +268,7 @@ public abstract class ModelCheckingServerAbstract implements ModelCheckingServer
     }
     
     public void offerPacket(Event event){
-    	messagesQueues[(int)event.getValue("sendNode")][(int)event.getValue("recvNode")].add(event);
+    	messagesQueues[event.getFromId()][event.getToId()].add(event);
     	LOG.info("Intercept event " + event.toString() +" to messagesQueue");
     }
     
@@ -370,7 +370,7 @@ public abstract class ModelCheckingServerAbstract implements ModelCheckingServer
     	if (interceptorName.equals("raftModelChecker")){
     		boolean leaderExist = false;
     		for(int i=0; i<numNode; i++){
-    			if((int)localStates[i].getValue("state") == 2){
+    			if((Integer)localStates[i].getValue("state") == 2){
     				if(!leaderExist){
     					// one leader exists
     					leaderExist = true;
@@ -705,7 +705,7 @@ public abstract class ModelCheckingServerAbstract implements ModelCheckingServer
 	        	writer.println("execute=true");
 		        writer.close();
 		        
-		    	LOG.info("Enable event with ID : " + packet.getId());
+		    	LOG.info("Enable event with ID : " + packet.getId() + " filename: " + packet.getValue(Event.FILENAME));
 		        
 		        Runtime.getRuntime().exec("mv " + ipcDir + "/new/" + packet.getValue(Event.FILENAME) + " " + 
 		        		ipcDir + "/ack/" + packet.getValue(Event.FILENAME));
@@ -1030,13 +1030,13 @@ public abstract class ModelCheckingServerAbstract implements ModelCheckingServer
 		boolean diffTerm = false;
 		waitForNextLE = false;
 		for(int i=0; i<numNode; i++){
-			if((int)localStates[i].getValue("state") == 2){
+			if((Integer)localStates[i].getValue("state") == 2){
 				totalLeader++;
-			} else if((int)localStates[i].getValue("state") == 1) {
+			} else if((Integer)localStates[i].getValue("state") == 1) {
 				totalCandidate++;
-			} else if ((int)localStates[i].getValue("state") == 0){
+			} else if ((Integer)localStates[i].getValue("state") == 0){
 				totalFollower++;
-			} else if ((int)localStates[i].getValue("state") == -1){ // there is node that hasn't executed anything
+			} else if ((Integer)localStates[i].getValue("state") == -1){ // there is node that hasn't executed anything
 				waitForNextLE = true;
 			}
 			
@@ -1070,7 +1070,7 @@ public abstract class ModelCheckingServerAbstract implements ModelCheckingServer
     	if(interceptorName.equals("raftModelChecker")){
 	    	int unsetNode = 0;
 	    	for(int i=0; i<numNode; i++){
-				if((int)localStates[i].getValue("state") < 0){
+				if((Integer)localStates[i].getValue("state") < 0){
 					unsetNode++;
 				}
 	    	}
@@ -1083,7 +1083,7 @@ public abstract class ModelCheckingServerAbstract implements ModelCheckingServer
     protected boolean allNodesHasTheSameTerm(){
     	if(interceptorName.equals("raftModelChecker")){
 	    	for(int i=0; i<numNode; i++){
-	    		if(i>0 && (int)localStates[i].getValue("term") != (int)localStates[i-1].getValue("term")){
+	    		if(i>0 && (Integer)localStates[i].getValue("term") != (Integer)localStates[i-1].getValue("term")){
 					return false;
 				}
 	    	}
@@ -1095,7 +1095,7 @@ public abstract class ModelCheckingServerAbstract implements ModelCheckingServer
     	if(interceptorName.equals("raftModelChecker")){
     		int totalLeader = 0;
 	    	for(int i=0; i<numNode; i++){
-	    		if((int)localStates[i].getValue("state") == 2){
+	    		if((Integer)localStates[i].getValue("state") == 2){
 	    			totalLeader++;
 				}
 	    	}

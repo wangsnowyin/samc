@@ -1,17 +1,16 @@
-package edu.uchicago.cs.ucare.samc.election;
+package edu.uchicago.cs.ucare.samc.zookeeper2;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uchicago.cs.ucare.example.election.LeaderElectionMain;
-import edu.uchicago.cs.ucare.samc.server.ModelCheckingServerAbstract;
 import edu.uchicago.cs.ucare.samc.transition.Transition;
+import edu.uchicago.cs.ucare.samc.server.ModelCheckingServerAbstract;
 import edu.uchicago.cs.ucare.samc.util.LocalState;
 import edu.uchicago.cs.ucare.samc.util.SpecVerifier;
 
 public class LeaderElectionVerifier extends SpecVerifier {
     
-    protected static final Logger LOG = LoggerFactory.getLogger(LeaderElectionVerifier.class);
+    protected static final Logger log = LoggerFactory.getLogger(LeaderElectionVerifier.class);
     
     
     public LeaderElectionVerifier() {
@@ -22,8 +21,9 @@ public class LeaderElectionVerifier extends SpecVerifier {
     	this.modelCheckingServer = modelCheckingServer;
     }
     
+    /*updated by Xueyin Wang*/
     @Override
-    public boolean verify() {
+    public boolean verify(){
     	int onlineNode = 0;
     	int[] supportTable = new int[modelCheckingServer.isNodeOnline.length];
         for (boolean status : modelCheckingServer.isNodeOnline) {
@@ -31,26 +31,38 @@ public class LeaderElectionVerifier extends SpecVerifier {
                 onlineNode++;
             }
         }
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; i++) {
             int numLeader = 0;
             int numFollower = 0;
             int numLooking = 0;
-            for (int j = 0; j < modelCheckingServer.isNodeOnline.length; ++j) {
+            for (int j = 0; j < modelCheckingServer.isNodeOnline.length; j++) {
                 if (modelCheckingServer.isNodeOnline[j]) {
                     LocalState localState = modelCheckingServer.localStates[j];
-                    if ((Integer)localState.getValue("role") == LeaderElectionMain.LEADING) {
-                        numLeader++;
-                        supportTable[j] = j;
-                    } else if ((Integer)localState.getValue("role") == LeaderElectionMain.FOLLOWING) {
-                        numFollower++;
-                        supportTable[j] = (Integer)localState.getValue("leader");
-                    } else if ((Integer)localState.getValue("role") == LeaderElectionMain.LOOKING) {
-                        numLooking++; 
-                        supportTable[j] = -1;
+                    switch((Integer)localState.getValue("state")){
+                        case 0: {
+                            numFollower++;
+                            supportTable[j] = (Integer)localState.getValue("proposedLeader");
+                            break;
+                        }
+                        case 1: break;
+                        case 2: {
+                            numLeader++;
+                            supportTable[j] = j;
+                            break;
+                        }
+                        case 3: break;
+                        default: {
+                            numLooking++; 
+                            supportTable[j] = -1;
+                            break;
+                        }
                     }
                 }
             }
             int quorum = modelCheckingServer.numNode / 2 + 1;
+            System.out.println("Verifier: onlineNode-" + onlineNode + " quorum-" + quorum + " numLeader-" + 
+            					numLeader + " numFollower-" + numFollower + " numLooking-" + numLooking);
+           
             if (onlineNode < quorum) {
                 if (numLeader == 0 && numFollower == 0 && numLooking == onlineNode) {
                     return true;
@@ -79,32 +91,40 @@ public class LeaderElectionVerifier extends SpecVerifier {
         return false;
     }
     
-    @Override
-	public boolean verifyNextTransition(Transition transition) {
-    	// none
-		return true;
-	}
     
     @Override
     public String verificationDetail() {
         StringBuilder strBuilder = new StringBuilder();
-        for (int i = 0; i < modelCheckingServer.isNodeOnline.length; ++i) {
+        for (int i = 0; i < modelCheckingServer.isNodeOnline.length; i++) {
             if (modelCheckingServer.isNodeOnline[i]) {
                 LocalState localState = modelCheckingServer.localStates[i];
-                if ((Integer)localState.getValue("role") == LeaderElectionMain.LEADING) {
-                    strBuilder.append("node " + i + " is LEADING ; ");
-                } else if ((Integer)localState.getValue("role") == LeaderElectionMain.FOLLOWING) {
-                    strBuilder.append("node " + i + " is FOLLOWING to " + localState.getValue("leader") + " ; ");
-                } else if ((Integer)localState.getValue("role") == LeaderElectionMain.LOOKING) {
-                    strBuilder.append("node " + i + " is still LOOKING ; ");
-                }
-            } else {
-                strBuilder.append("node " + i + " is down ; ");
-            }
+                switch((Integer)localState.getValue("state")){
+                    case 0: {
+                        strBuilder.append("node " + i + " is FOLLOWING ;");
+                        break;
+                    }
+                    case 1: break;
+                    case 2: {
+                        strBuilder.append("node " + i + " is LEADING ; ");
+                        break;
+                    }
+                    case 3: {
+                        strBuilder.append("node " + i + " is down ; ");
+                        break;
+                    }
+                    default: {
+                        strBuilder.append("node " + i + " is still LOOKING ; ");
+                        break;
+                    }
+                } 
+            }                
         }
         return strBuilder.toString();
     }
-
-	
     
+    @Override
+    public boolean verifyNextTransition(Transition transition) {
+        return true;
+    }
+
 }

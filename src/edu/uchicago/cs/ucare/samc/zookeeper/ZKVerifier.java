@@ -48,7 +48,7 @@ public class ZKVerifier extends SpecVerifier {
 		errorType = "";
 		for(int node=0; node<modelCheckingServer.numNode; node++){
 			LocalState state = this.modelCheckingServer.localStates[node];
-			switch((int)state.getValue("state")){
+			switch((Integer)state.getValue("state")){
 				case 2: // LEADING
 					numLeader++;
 					break;

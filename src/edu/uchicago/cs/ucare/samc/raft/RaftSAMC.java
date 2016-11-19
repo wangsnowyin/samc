@@ -18,9 +18,9 @@ public class RaftSAMC extends DporModelChecker {
 	@Override
 	public boolean isDependent(LocalState state, Event e1, Event e2) {
 		// add policies here (initial policy)
-		int p1Term = (int) e1.getValue("term");
-		int p2Term = (int) e2.getValue("term");
-		if((int)state.getValue("term") <= p1Term || (int)state.getValue("term") <= p2Term){
+		int p1Term = (Integer) e1.getValue("term");
+		int p2Term = (Integer) e2.getValue("term");
+		if((Integer)state.getValue("term") <= p1Term || (Integer)state.getValue("term") <= p2Term){
 			return true;
 		}
 		return false;

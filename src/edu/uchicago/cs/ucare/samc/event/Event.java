@@ -32,15 +32,15 @@ public class Event implements Serializable {
     }
     
     public int getId(){
-    	return (int) getValue(HASH_ID_KEY);
+    	return (Integer) getValue(HASH_ID_KEY);
     }
     
     public int getFromId(){
-    	return (int) getValue(FROM_ID);
+    	return (Integer) getValue(FROM_ID);
     }
     
     public int getToId(){
-    	return (int) getValue(TO_ID);
+    	return (Integer) getValue(TO_ID);
     }
 
     public boolean isObsolete() {

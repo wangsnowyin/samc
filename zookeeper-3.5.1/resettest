@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+if [ $# -ne 3 ]; then
+  echo "usage: resettest <workingDir> <numNode> <testId>"
+  exit 1
+fi
+
+workingDir=$1
+numNode=$2
+testId=$3
+
+mkdir $workingDir/console/$testId
+
+i=0
+while [ $i -lt $numNode ]; do
+  rm -rf $workingDir/config/zk$i/data
+  mkdir $workingDir/config/zk$i/data
+  echo $i > $workingDir/config/zk$i/data/myid
+
+  rm -rf $workingDir/log/zk$i/*
+
+  i=`expr $i + 1`
+done
+
+# hacking for testing
+#if [ "$debug" = "1" ]; then
+#  mkdir $working_dir/backup 2> /dev/null
+#  id=`ls $working_dir/backup | wc -l`
+#  id=`expr $id + 1`
+#  cp -r $working_dir/log $working_dir/backup/$id
+#fi
+
+#rm -r $working_dir/log $working_dir/data 2> /dev/null
+#mkdir $working_dir/log $working_dir/data
+#i=0
+#while [ $i -lt $num_node ]; do
+#  mkdir $working_dir/log/$i $working_dir/data/$i
+#  echo $i > $working_dir/data/$i/myid
+#  i=`expr $i + 1`
+#done

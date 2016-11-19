@@ -30,7 +30,7 @@ public class LocalState implements Serializable {
     
     public String getRaftStateName(){
 		String result = "";
-		switch((int)getValue("state")){
+		switch((Integer)getValue("state")){
 			case 0:
 				result = "FOLLOWER";
 				break;

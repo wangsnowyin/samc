@@ -3,6 +3,7 @@ package edu.uchicago.cs.ucare.samc.server;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -210,8 +211,12 @@ public class FileWatcher implements Runnable{
 		    	long leader = Long.parseLong(ev.getProperty("leader"));
 		    	long zxid = Long.parseLong(ev.getProperty("zxid"));
 		    	long epoch = Long.parseLong(ev.getProperty("epoch"));
-		    	int eventId = (int) Long.parseLong(ev.getProperty("eventId"));
+		    	int eventId = (int) Long.parseLong(filename.substring(3));
 		    	int hashId = commonHashId(eventId);
+
+		    	System.out.println("DMCK receives ZK event with hashId-" + hashId + " sender-" + sender + 
+		    			" recv-" + recv + " state-" + state + " leader-" + leader +
+		    			" zxid-" + zxid + " epoch-" + epoch + " filename-" + filename);
 		    	
 		    	Event event = new Event(hashId);
 		    	event.addKeyValue(Event.FROM_ID, sender);
@@ -221,10 +226,6 @@ public class FileWatcher implements Runnable{
 		    	event.addKeyValue("leader", leader);
 		    	event.addKeyValue("zxid", zxid);
 		    	event.addKeyValue("epoch", epoch);
-		    	
-		    	LOG.info("DMCK receives ZK event with hashId-" + hashId + " sender-" + sender + 
-		    			" recv-" + recv + " state-" + state + " leader-" + leader +
-		    			" zxid-" + zxid + " epoch-" + epoch + " filename-" + filename);
 		    	
 		    	checker.offerPacket(event);
 	    	} else if(filename.startsWith("zkUpdate-")){
@@ -244,6 +245,70 @@ public class FileWatcher implements Runnable{
 	    		localstate.addKeyValue("proposedZxid", proposedZxid);
 	    		localstate.addKeyValue("logicalclock", logicalclock);
 	    		checker.setLocalState(sender, localstate);
+	    	} else 
+	    	//ZK-3.5
+	    	if (filename.startsWith("zkls-")) {
+	    		int sender = Integer.parseInt(ev.getProperty("sender"));
+		    	int state = Integer.parseInt(ev.getProperty("state"));
+		    	int leader = Integer.parseInt(ev.getProperty("proposedLeader"));
+		    	String sElectionTable = ev.getProperty("electionTable");
+
+		    	Map<Integer, Integer> electionTable = new HashMap<Integer, Integer>();	    		
+	    		if(sElectionTable != null && sElectionTable.length() > 0){
+	    			sElectionTable = sElectionTable.substring(0, ev.getProperty("electionTable").length()-1);
+	    			String[] electionTableValues = sElectionTable.split(",");	    		
+	    			for (String value : electionTableValues){
+	    				String[] temp = value.split(":");
+	    				electionTable.put(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+	    			}
+	    		}
+
+	    		System.out.println("[DEBUG] Receive update state " + filename + ", sendrole=" + 
+	    				ev.getProperty("strSendRole") + ", leader=" + ev.getProperty("proposedLeader"));
+
+	    		LocalState localstate = new LocalState(sender);
+	    		localstate.addKeyValue("state", state);
+	    		localstate.addKeyValue("proposedLeader", leader);
+	    		localstate.addKeyValue("electionTable", sElectionTable);
+
+	    		checker.setLocalState(sender, localstate);
+	    	} else if(filename.startsWith("sync-")) { 
+	    		int sendNode = Integer.parseInt(ev.getProperty("sender"));
+		    	int recvNode = Integer.parseInt(ev.getProperty("recv"));
+		    	String strRole = ev.getProperty("strSendRole");
+		    	int leader = Integer.parseInt(ev.getProperty("leader"));
+		    	long zxid = Long.parseLong(ev.getProperty("zxid"));
+		    	int eventId = Integer.parseInt(filename.substring(5));
+		    	int hashId = commonHashId(eventId);
+
+		    	Event event = new Event(hashId);
+		    	event.addKeyValue(Event.FROM_ID, sendNode);
+		    	event.addKeyValue(Event.TO_ID, recvNode);
+		    	event.addKeyValue(Event.FILENAME, filename);
+		    	event.addKeyValue("senderRole", strRole);
+		    	event.addKeyValue("leader", leader);
+		    	event.addKeyValue("zxid", zxid);
+
+		    	System.out.println("DMCK receives ZK sync File : eventId-"+ filename.substring(5) + 
+		    		" sendNode-" + sendNode + " sendRole-" + ev.getProperty("sendRole") + 
+		    		" recvNode-" + ev.getProperty("recvNode") + " leader-" + ev.getProperty("leader"));
+
+		    	checker.offerPacket(event);
+	    	} else if(filename.startsWith("rc-")) {
+	    		int eventId = Integer.parseInt(filename.substring(3));
+	    		int sendNode = Integer.parseInt(ev.getProperty("sender"));
+	    		int recvNode = Integer.parseInt(ev.getProperty("recv"));
+	    		int hashId = commonHashId(eventId);
+
+	    		Event event = new Event(hashId);
+	    		event.addKeyValue(Event.FROM_ID, sendNode);
+		    	event.addKeyValue(Event.TO_ID, recvNode);
+		    	event.addKeyValue(Event.FILENAME, filename);
+
+	    		System.out.println("[DEBUG] Process reconfig File : eventId-"+ filename.substring(3) + 
+	    			"sender-" + ev.getProperty("sender") + " recvNode-" + ev.getProperty("recvNode"));
+	    		
+	    		checker.offerPacket(event);
 	    	}
 	    	
 	    	// remove the received msg
@@ -251,6 +316,7 @@ public class FileWatcher implements Runnable{
 	    	Runtime.getRuntime().exec("rm " + path + "/" + filename);
 	    	
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOG.error("DMCK experiences error in processing message " + filename);
 		}
 	}

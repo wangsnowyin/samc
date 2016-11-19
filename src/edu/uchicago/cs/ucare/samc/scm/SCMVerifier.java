@@ -27,7 +27,7 @@ public class SCMVerifier extends SpecVerifier {
     @Override
     public boolean verify(){
     	receiver = modelCheckingServer.localStates[0];
-    	if((int)receiver.getValue("vote") != 4){
+    	if((Integer)receiver.getValue("vote") != 4){
     		error = true;
     		return false;
     	} else {

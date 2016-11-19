@@ -23,7 +23,7 @@ public class AbstractRaftSnapshot extends NodeOperationTransition{
 		int leaderId = -1;
 		int totalLeader = 0;
 		for (int i=0; i<checker.numNode; i++){
-			if((int)checker.localStates[i].getValue("state") == 2){
+			if((Integer)checker.localStates[i].getValue("state") == 2){
 				leaderId = i;
 				totalLeader++;
 				if(totalLeader > 1){
