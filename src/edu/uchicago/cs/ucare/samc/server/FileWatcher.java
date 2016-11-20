@@ -214,7 +214,7 @@ public class FileWatcher implements Runnable{
 		    	int eventId = (int) Long.parseLong(filename.substring(3));
 		    	int hashId = commonHashId(eventId);
 
-		    	System.out.println("DMCK receives ZK event with hashId-" + hashId + " sender-" + sender + 
+		    	LOG.info("DMCK receives ZK event with hashId-" + hashId + " sender-" + sender + 
 		    			" recv-" + recv + " state-" + state + " leader-" + leader +
 		    			" zxid-" + zxid + " epoch-" + epoch + " filename-" + filename);
 		    	
@@ -263,7 +263,7 @@ public class FileWatcher implements Runnable{
 	    			}
 	    		}
 
-	    		System.out.println("[DEBUG] Receive update state " + filename + ", sendrole=" + 
+	    		LOG.info("[DEBUG] Receive update state " + filename + ", sendrole=" + 
 	    				ev.getProperty("strSendRole") + ", leader=" + ev.getProperty("proposedLeader"));
 
 	    		LocalState localstate = new LocalState(sender);
@@ -289,7 +289,7 @@ public class FileWatcher implements Runnable{
 		    	event.addKeyValue("leader", leader);
 		    	event.addKeyValue("zxid", zxid);
 
-		    	System.out.println("DMCK receives ZK sync File : eventId-"+ filename.substring(5) + 
+		    	LOG.info("DMCK receives ZK sync File : eventId-"+ filename.substring(5) + 
 		    		" sendNode-" + sendNode + " sendRole-" + ev.getProperty("sendRole") + 
 		    		" recvNode-" + ev.getProperty("recvNode") + " leader-" + ev.getProperty("leader"));
 
@@ -305,7 +305,7 @@ public class FileWatcher implements Runnable{
 		    	event.addKeyValue(Event.TO_ID, recvNode);
 		    	event.addKeyValue(Event.FILENAME, filename);
 
-	    		System.out.println("[DEBUG] Process reconfig File : eventId-"+ filename.substring(3) + 
+		    	LOG.info("[DEBUG] Process reconfig File : eventId-"+ filename.substring(3) + 
 	    			"sender-" + ev.getProperty("sender") + " recvNode-" + ev.getProperty("recvNode"));
 	    		
 	    		checker.offerPacket(event);

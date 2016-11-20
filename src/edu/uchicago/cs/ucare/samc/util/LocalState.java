@@ -32,16 +32,16 @@ public class LocalState implements Serializable {
 		String result = "";
 		switch((Integer)getValue("state")){
 			case 0:
-				result = "FOLLOWER";
+				result = "LOOKING";
 				break;
 			case 1:
-				result = "CANDIDATE";
+				result = "FOLLOWING";
 				break;
 			case 2:
 				result = "LEADER";
 				break;
 			case 3:
-				result = "HARD-CRASH";
+				result = "OBSERVING";
 				break;
 			default:
 				result = "UNSET";

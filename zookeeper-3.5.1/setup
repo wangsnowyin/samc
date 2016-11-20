@@ -16,6 +16,10 @@ cp $scriptdir/startNode.sh $working_dir/startNode.sh
 chmod 755 $working_dir/startNode.sh
 cp $scriptdir/killNode.sh $working_dir/killNode.sh
 chmod 755 $working_dir/killNode.sh
+cp $scriptdir/reconfig1.sh $working_dir/reconfig1.sh
+chmod 755 $working_dir/reconfig1.sh
+cp $scriptdir/reconfig2.sh $working_dir/reconfig2.sh
+chmod 755 $working_dir/reconfig2.sh
 sed "s:WORKING_DIR:$working_dir:" $scriptdir/zkRunner.sh > $working_dir/zkRunner.sh
 chmod 755 $working_dir/zkRunner.sh
 cp $scriptdir/readconfig $working_dir/readconfig

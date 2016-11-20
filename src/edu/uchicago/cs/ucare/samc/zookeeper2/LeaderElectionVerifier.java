@@ -38,24 +38,25 @@ public class LeaderElectionVerifier extends SpecVerifier {
             for (int j = 0; j < modelCheckingServer.isNodeOnline.length; j++) {
                 if (modelCheckingServer.isNodeOnline[j]) {
                     LocalState localState = modelCheckingServer.localStates[j];
+                    if((Integer)localState.getValue("state") == null) continue;
                     switch((Integer)localState.getValue("state")){
                         case 0: {
-                            numFollower++;
-                            supportTable[j] = (Integer)localState.getValue("proposedLeader");
+                        	numLooking++;
+                            supportTable[j] = -1;
                             break;
                         }
-                        case 1: break;
+                        case 1: {
+                        	numFollower++;
+                        	supportTable[j] = (Integer)localState.getValue("proposedLeader");
+                        	break;
+                        }
                         case 2: {
                             numLeader++;
                             supportTable[j] = j;
                             break;
                         }
                         case 3: break;
-                        default: {
-                            numLooking++; 
-                            supportTable[j] = -1;
-                            break;
-                        }
+                        default: break;
                     }
                 }
             }
@@ -98,22 +99,29 @@ public class LeaderElectionVerifier extends SpecVerifier {
         for (int i = 0; i < modelCheckingServer.isNodeOnline.length; i++) {
             if (modelCheckingServer.isNodeOnline[i]) {
                 LocalState localState = modelCheckingServer.localStates[i];
+                if((Integer)localState.getValue("state") == null) {
+                	strBuilder.append("node " + i + " is down ; ");
+                	continue;
+                }
                 switch((Integer)localState.getValue("state")){
                     case 0: {
-                        strBuilder.append("node " + i + " is FOLLOWING ;");
+                        strBuilder.append("node " + i + " is LOOKING; ");
                         break;
                     }
-                    case 1: break;
+                    case 1: {
+                    	strBuilder.append("node " + i + " is FOLLOWING; ");
+                    	break;
+                    }
                     case 2: {
-                        strBuilder.append("node " + i + " is LEADING ; ");
+                        strBuilder.append("node " + i + " is LEADING; ");
                         break;
                     }
                     case 3: {
-                        strBuilder.append("node " + i + " is down ; ");
+                        strBuilder.append("node " + i + " is OBSERVING; ");
                         break;
                     }
                     default: {
-                        strBuilder.append("node " + i + " is still LOOKING ; ");
+                        strBuilder.append("node " + i + " is UNSET; ");
                         break;
                     }
                 } 

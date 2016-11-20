@@ -18,16 +18,16 @@ public class LeaderElectionEnsembleController extends WorkloadDriver {
     String ipcDir;
     
     Process[] node;
-    Thread consoleWriter;
-    FileOutputStream[] consoleLog;
+    //Thread consoleWriter;
+    //FileOutputStream[] consoleLog;
     
     public LeaderElectionEnsembleController(int numNode, String workingDir, String sIpcDir, String samcDir, String targetSysDir) {
         super(numNode, workingDir, sIpcDir, samcDir, targetSysDir);
         ipcDir = sIpcDir;
         node = new Process[numNode];
-        consoleLog = new FileOutputStream[numNode];
-        consoleWriter = new Thread(new LogWriter());
-        consoleWriter.start();
+        //consoleLog = new FileOutputStream[numNode];
+        //consoleWriter = new Thread(new LogWriter());
+        //consoleWriter.start();
     }
     
     public void resetTest(int testId) {
@@ -54,18 +54,18 @@ public class LeaderElectionEnsembleController extends WorkloadDriver {
             
             startNode(1);
             Thread.sleep(200);
-            //reconfig(1);
+            reconfig(1);
             
             startNode(2);
             Thread.sleep(200);
-            //reconfig(2);
+            reconfig(2);
             
         } catch (InterruptedException e) {
             LOG.error("Error in starting node");
         }      
     }
     
-    String zk_dir = "/Users/wangsnowyin/Documents/zookeeper-3.5.1-alpha";
+    String zk_dir = targetSysDir;
     public void resetDynamic(int id){
     	BufferedWriter out = null;
     	try  
@@ -73,13 +73,13 @@ public class LeaderElectionEnsembleController extends WorkloadDriver {
     	    FileWriter fstream = new FileWriter(zk_dir + "/conf/zoo" + id + ".cfg.dynamic", false);
     	    out = new BufferedWriter(fstream);
     	    if(id == 0){
-    	    	out.write("server.0=localhost:2891:3891:participant;2180");
+    	    	out.write("server.0=localhost:2890:3890:participant;2180");
     	    }
     	    if(id == 1){
-    	    	out.write("server.0=localhost:2891:3891:participant;2180\nserver.1=localhost:2892:3892:participant;2181");
+    	    	out.write("server.0=localhost:2890:3890:participant;2180\nserver.1=localhost:2891:3891:participant;2181");
     	    }
     	    if(id == 2){
-    	    	out.write("server.0=localhost:2891:3891:participant;2180\nserver.1=localhost:2892:3892:participant;2181\nserver.2=localhost:2893:3893:participant;2182");
+    	    	out.write("server.0=localhost:2890:3890:participant;2180\nserver.1=localhost:2891:3891:participant;2181\nserver.2=localhost:2892:3892:participant;2182");
     	    }
     	    out.close();
     	}
@@ -94,7 +94,7 @@ public class LeaderElectionEnsembleController extends WorkloadDriver {
             LOG.debug("Reconfig node " + id);
         }
     	try {
-            Runtime.getRuntime().exec(zk_dir + "/bin/reconfig" + id + ".sh");
+            Runtime.getRuntime().exec(workingDir + "/reconfig" + id + ".sh");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -146,7 +146,7 @@ public class LeaderElectionEnsembleController extends WorkloadDriver {
         }
     }
     
-    class LogWriter implements Runnable {
+   /*class LogWriter implements Runnable {
 
         public void run() {
             byte[] buff = new byte[256];
@@ -178,7 +178,7 @@ public class LeaderElectionEnsembleController extends WorkloadDriver {
             }
         }
         
-    }
+    }*/
 
     @Override
     public void runWorkload() {
