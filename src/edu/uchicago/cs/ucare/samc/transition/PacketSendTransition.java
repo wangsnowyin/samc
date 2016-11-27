@@ -106,5 +106,9 @@ public class PacketSendTransition extends Transition implements Serializable {
     public Event getPacket() {
         return packet;
     }
+    
+    public ModelCheckingServerAbstract getChecker() {
+    	return checker;
+    }
 
 }

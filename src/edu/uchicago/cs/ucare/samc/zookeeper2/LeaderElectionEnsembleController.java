@@ -10,24 +10,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uchicago.cs.ucare.samc.util.WorkloadDriver;
+import edu.uchicago.cs.ucare.samc.util.LocalState;
 
 public class LeaderElectionEnsembleController extends WorkloadDriver {
     
     private final static Logger LOG = LoggerFactory.getLogger(LeaderElectionEnsembleController.class);
     
-    String ipcDir;
-    
+    String ipcDir;    
     Process[] node;
-    //Thread consoleWriter;
-    //FileOutputStream[] consoleLog;
     
     public LeaderElectionEnsembleController(int numNode, String workingDir, String sIpcDir, String samcDir, String targetSysDir) {
         super(numNode, workingDir, sIpcDir, samcDir, targetSysDir);
         ipcDir = sIpcDir;
         node = new Process[numNode];
-        //consoleLog = new FileOutputStream[numNode];
-        //consoleWriter = new Thread(new LogWriter());
-        //consoleWriter.start();
     }
     
     public void resetTest(int testId) {
@@ -54,7 +49,7 @@ public class LeaderElectionEnsembleController extends WorkloadDriver {
             
             startNode(1);
             Thread.sleep(200);
-            reconfig(1);
+            //reconfig(1);
             
             startNode(2);
             Thread.sleep(200);
@@ -73,7 +68,7 @@ public class LeaderElectionEnsembleController extends WorkloadDriver {
     	    FileWriter fstream = new FileWriter(zk_dir + "/conf/zoo" + id + ".cfg.dynamic", false);
     	    out = new BufferedWriter(fstream);
     	    if(id == 0){
-    	    	out.write("server.0=localhost:2890:3890:participant;2180");
+    	    	out.write("server.0=localhost:2890:3890:participant;2180\nserver.1=localhost:2891:3891:participant;2181");
     	    }
     	    if(id == 1){
     	    	out.write("server.0=localhost:2890:3890:participant;2180\nserver.1=localhost:2891:3891:participant;2181");
@@ -145,40 +140,6 @@ public class LeaderElectionEnsembleController extends WorkloadDriver {
             throw new RuntimeException(e);
         }
     }
-    
-   /*class LogWriter implements Runnable {
-
-        public void run() {
-            byte[] buff = new byte[256];
-            while (true) {
-                for (int i = 0; i < numNode; ++i) {
-                    if (node[i] != null) {
-                        int r = 0;
-                        InputStream stdout = node[i].getInputStream();
-                        InputStream stderr = node[i].getErrorStream();
-                        try {
-                            while((r = stdout.read(buff)) != -1) {
-                                consoleLog[i].write(buff, 0, r);
-                                consoleLog[i].flush();
-                            }
-                            while((r = stderr.read(buff)) != -1) {
-                                consoleLog[i].write(buff, 0, r);
-                                consoleLog[i].flush();
-                            }
-                        } catch (IOException e) {
-//                            LOG.debug("", e);
-                        }
-                    }
-                }
-                try {
-                    Thread.sleep(300);
-                } catch (InterruptedException e) {
-                    LOG.warn("", e);
-                }
-            }
-        }
-        
-    }*/
 
     @Override
     public void runWorkload() {

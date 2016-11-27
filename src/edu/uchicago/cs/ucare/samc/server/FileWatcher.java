@@ -263,14 +263,14 @@ public class FileWatcher implements Runnable{
 	    			}
 	    		}
 
-	    		LOG.info("[DEBUG] Receive update state " + filename + ", sendrole=" + 
+	    		System.out.println("[DEBUG] Receive update state " + filename + ", sendrole=" + 
 	    				ev.getProperty("strSendRole") + ", leader=" + ev.getProperty("proposedLeader"));
 
 	    		LocalState localstate = new LocalState(sender);
 	    		localstate.addKeyValue("state", state);
 	    		localstate.addKeyValue("proposedLeader", leader);
 	    		localstate.addKeyValue("electionTable", sElectionTable);
-
+	    		
 	    		checker.setLocalState(sender, localstate);
 	    	} else if(filename.startsWith("sync-")) { 
 	    		int sendNode = Integer.parseInt(ev.getProperty("sender"));

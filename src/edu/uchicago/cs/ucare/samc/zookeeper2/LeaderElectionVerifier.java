@@ -35,6 +35,7 @@ public class LeaderElectionVerifier extends SpecVerifier {
             int numLeader = 0;
             int numFollower = 0;
             int numLooking = 0;
+            int numCrashed = 0;
             for (int j = 0; j < modelCheckingServer.isNodeOnline.length; j++) {
                 if (modelCheckingServer.isNodeOnline[j]) {
                     LocalState localState = modelCheckingServer.localStates[j];
@@ -56,14 +57,19 @@ public class LeaderElectionVerifier extends SpecVerifier {
                             break;
                         }
                         case 3: break;
+                        case 4: {
+                        	numCrashed++;
+                        	break;
+                        }
                         default: break;
                     }
                 }
             }
             int quorum = modelCheckingServer.numNode / 2 + 1;
             System.out.println("Verifier: onlineNode-" + onlineNode + " quorum-" + quorum + " numLeader-" + 
-            					numLeader + " numFollower-" + numFollower + " numLooking-" + numLooking);
-           
+            					numLeader + " numFollower-" + numFollower + " numLooking-" + numLooking + " numCrashed-" + numCrashed);
+            
+            if(numCrashed > 0) return false;
             if (onlineNode < quorum) {
                 if (numLeader == 0 && numFollower == 0 && numLooking == onlineNode) {
                     return true;
@@ -119,6 +125,9 @@ public class LeaderElectionVerifier extends SpecVerifier {
                     case 3: {
                         strBuilder.append("node " + i + " is OBSERVING; ");
                         break;
+                    }
+                    case 4: {
+                    	strBuilder.append("node " + i + " is CRASHED; ");
                     }
                     default: {
                         strBuilder.append("node " + i + " is UNSET; ");

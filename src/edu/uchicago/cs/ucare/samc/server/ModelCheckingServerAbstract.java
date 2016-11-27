@@ -401,19 +401,19 @@ public abstract class ModelCheckingServerAbstract implements ModelCheckingServer
     }
     
     public void printTransitionQueues(LinkedList<Transition> transitionList){
-    	LOG.debug("-----------------------------");
-        LOG.debug("Events in DMCK Queue : " + transitionList.size());
+    	System.out.println("-----------------------------");
+    	System.out.println("Events in DMCK Queue : " + transitionList.size());
         
         int counter = 1;
         for (Transition t : transitionList) {
         	if(t != null){
-        		LOG.debug(counter + ". " + t.toString());
+        		System.out.println(counter + ". " + t.toString());
         	} else {
-        		LOG.debug(counter + ". null event");
+        		System.out.println(counter + ". null event");
         	}
         	counter++;
         }
-        LOG.debug("-----------------------------");
+        System.out.println("-----------------------------");
     }
     
     public void printPacketQueues(LinkedList<Event> packetList){
